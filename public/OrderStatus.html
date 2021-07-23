@@ -1,10 +1,187 @@
-<!DOCTYPE html>
 <html>
 <head>
-<meta charset="ISO-8859-1">
-<title>Insert title here</title>
+    <title></title>
+    <!--  Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!--  Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <style>
+    
+    	/* Program CSS */
+    	
+        body {
+            background-color: #DDD;
+        }
+
+        .top-header {
+            padding: 10px;
+        }
+
+        .time-to-finish {
+            text-align: right;
+        }
+
+        .bg-blue {
+            height: 70px;
+            background-color: blue;
+            text-align: center;
+            color: white;
+            line-height: 70px;
+        }
+
+        .bg-gray {
+            height: 70px;
+            background-color: gray;
+            text-align: center;
+            color: white;
+            line-height: 70px;
+        }
+
+        .bg-white {
+            background-color: white;
+        }
+
+        .principal {
+            background-color:darkblue;
+        }
+
+        .color-white{
+            color: white;
+        }
+
+        .title-order {
+            padding-top: 20px;
+            font-size: 1.2em;
+            color: #777;
+        }
+
+        .header-table {
+            border-bottom: 1px solid #555;
+            font-weight: bold;
+        }
+
+        .prod-cel {
+            padding: 10px;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        #welcomeMessage {
+            background-color: chartreuse;
+            padding: 5px;
+        }
+    </style>
 </head>
 <body>
+    <div class="container principal">
+        <div class="row top-header">
+            <div class="col color-white">
+                Jul 18, 2021
+            </div>
+            <div class="col time-to-finish color-white">
+                Time to finish: 30 min
+            </div>            
+        </div>
+        
+        <!--  Order Status Delivery -->
+        <div class="row">
+            <div class="col bg-blue">
+                Order Received
+            </div>
+            <div class="col bg-gray">
+                Preparing
+            </div>
+            <div class="col bg-gray">
+                Cooking 
+            </div>
+            <div class="col bg-gray">
+                It's ready
+            </div>
+			<div class="col bg-gray">
+                Out for delivery
+            </div>
+			<div class="col bg-gray">
+                Delivered!
+            </div>
+        </div>
+        <div style="padding: 10px;" class="row">
+            <div id="welcomeMessage"  class="col">
 
+            </div>
+        </div>
+    </div>    
+    <div class="container">
+        <p class="title-order">
+            Details for Order <b><span id="orderNumber" style="color: black;"></span></b>
+        </p>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col header-table">
+                Item
+            </div>
+            <div class="col header-table">
+                Quantity
+            </div>
+            <div class="col header-table">
+                Total
+            </div>
+        </div>
+        <div id="products"></div>
+        <div class="row">
+            <div id="totalAmount" style="text-align: right;" class="col"></div>
+        </div>
+    </div>
+    <script>
+    	// Json object will receive all info from previous page
+        var order = {
+			customerName: "Murilo", 
+			customerLastName: "Moraes",
+			customerAddress: "38 Fossil St",
+			customerCity: "Brampton",		
+			customerProvince: "ON",
+			customerPostalCode: "L6W 3G7",
+			orderNumber: 101,
+			productList: [
+					{
+                        name: "Product 1",
+                        value: 100.00,
+                        quantity: 2
+					},
+					{
+                        name: "Product 2",
+                        value: 50.00,
+                        quantity: 3
+					}
+				]
+			}
+
+        document.getElementById("welcomeMessage").innerHTML = `Hi <b>${order.customerName}</b>, Thank you for your order!`;
+	    document.getElementById("orderNumber").innerHTML = `#${order.orderNumber}`;	    
+        
+	    // populate the product info in a dynamic way.
+        var totalAmount = 0;
+        var prodElement = document.getElementById("products");
+        for(let i=0;i<order.productList.length;i++) {
+            var prod = order.productList[i];
+            prodElement.innerHTML+= `
+                <div class="row">
+                    <div class="col prod-cel">
+                        ${prod.name}
+                    </div>
+                    <div class="col center prod-cel">
+                        ${prod.quantity}                
+                    </div>
+                    <div class="col center prod-cel">
+                        $${prod.value}                          
+                    </div>
+                </div>
+            `;
+            totalAmount += prod.value*prod.quantity;
+        }
+        document.getElementById("totalAmount").innerHTML = `The final almount is: $${totalAmount}`;
+    </script>
 </body>
 </html>
