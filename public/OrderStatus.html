@@ -77,32 +77,32 @@
 <body>
     <div class="container principal">
         <div class="row top-header">
-            <div class="col color-white">
-                Jul 18, 2021
+            <div id="date" class="col color-white">
+                
             </div>
             <div class="col time-to-finish color-white">
-                Time to finish: 30 min
+                Time to finish: <spam id="timer"></spam>	
             </div>            
         </div>
         
         <!--  Order Status Delivery -->
         <div class="row">
-            <div class="col bg-blue">
+            <div id="order" class="col bg-blue">
                 Order Received
             </div>
-            <div class="col bg-gray">
+            <div id="preparing" class="col bg-gray">
                 Preparing
             </div>
-            <div class="col bg-gray">
+            <div id="cooking" class="col bg-gray">
                 Cooking 
             </div>
-            <div class="col bg-gray">
+            <div id="ready" class="col bg-gray">
                 It's ready
             </div>
-			<div class="col bg-gray">
+			<div id="delivery" class="col bg-gray">
                 Out for delivery
             </div>
-			<div class="col bg-gray">
+			<div id="delivered" class="col bg-gray">
                 Delivered!
             </div>
         </div>
@@ -157,11 +157,23 @@
 					}
 				]
 			}
-
+		
+    	// Show customer's name
         document.getElementById("welcomeMessage").innerHTML = `Hi <b>${order.customerName}</b>, Thank you for your order!`;
-	    document.getElementById("orderNumber").innerHTML = `#${order.orderNumber}`;	    
+	    
+     	// Show order number
+        document.getElementById("orderNumber").innerHTML = `#${order.orderNumber}`;	    
         
-	    // populate the product info in a dynamic way.
+	    
+	    const monthNames = ["January", "February", "March", "April", "May", "June",
+  							"July", "August", "September", "October", "November", "December"
+							];
+	    
+	    // Get current date
+	    var currentDate = new Date();
+	    document.getElementById("date").innerHTML = `${monthNames[currentDate.getMonth()]} ${currentDate.getDate()}, ${currentDate.getFullYear()} `;
+	    
+	    // Populate the product info in a dynamic way.
         var totalAmount = 0;
         var prodElement = document.getElementById("products");
         for(let i=0;i<order.productList.length;i++) {
@@ -181,7 +193,91 @@
             `;
             totalAmount += prod.value*prod.quantity;
         }
+        // Show the final amount
         document.getElementById("totalAmount").innerHTML = `The final almount is: $${totalAmount}`;
+        
+   
+        // Time-based state change timer
+        var time = 25;
+        
+        var timer = setInterval(function() {
+            var minutes = Math.floor(time / 60);
+            var seconds = time % 60;
+            var stringMinutes = minutes < 10 ? "0" + minutes : minutes;
+            var stringSeconds = seconds < 10 ? "0" + seconds : seconds;
+            document.getElementById("timer").innerHTML = `${stringMinutes}:${stringSeconds}`;
+                  
+            if (time == 20){
+            	changeStatusToPreparing();
+            } 
+            if (time == 15){
+            	changeStatusToCooking();
+            }
+            if (time == 10){
+            	changeStatusToReady();
+            } 
+            if (time == 5){
+            	changeStatusToDelivery();
+            }
+            if (time == 0){
+            	changeStatusToDelivered();
+            } 
+            
+            if(time > 0) {
+                time--;
+            }
+            
+        }, 1000);
+        
+        // Variables 
+        var order = document.getElementById("order");
+        var preparing = document.getElementById("preparing");
+        var cooking = document.getElementById("cooking");
+        var ready = document.getElementById("ready");
+        var delivery = document.getElementById("delivery");
+        var delivered = document.getElementById("delivered");
+        
+        // Methods to change the color for order status
+        function changeStatusToPreparing(){
+        	order.classList.remove("bg-blue");
+        	order.classList.add("bg-gray");
+        	preparing.classList.remove("bg-gray");
+        	preparing.classList.add("bg-blue");
+        }
+        
+        function changeStatusToCooking(){
+        	preparing.classList.remove("bg-blue");
+        	preparing.classList.add("bg-gray");
+        	cooking.classList.remove("bg-gray");
+        	cooking.classList.add("bg-blue");
+        }
+        
+        function changeStatusToReady(){
+        	cooking.classList.remove("bg-blue");
+        	cooking.classList.add("bg-gray");
+        	ready.classList.remove("bg-gray");
+        	ready.classList.add("bg-blue");
+        }       
+        
+        function changeStatusToDelivery(){
+        	ready.classList.remove("bg-blue");
+        	ready.classList.add("bg-gray");
+        	delivery.classList.remove("bg-gray");
+        	delivery.classList.add("bg-blue");
+        }
+        
+        function changeStatusToDelivered(){
+        	delivery.classList.remove("bg-blue");
+        	delivery.classList.add("bg-gray");
+        	delivered.classList.remove("bg-gray");
+        	delivered.classList.add("bg-blue");
+        	
+        	clearInterval(timer);
+        	
+        	setTimeout(function(){alert("Order Delivered!");}, 100);
+        	
+        }
+               
     </script>
 </body>
 </html>
